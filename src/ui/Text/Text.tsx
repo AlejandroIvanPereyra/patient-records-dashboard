@@ -3,16 +3,17 @@ import type { ReactNode } from "react"
 
 type TextProps = {
     children: ReactNode
-    variant?: "body" | "title" | "link"
+    variant?: "body" | "title" | "link" | "muted"
     size?: "sm" | "md" | "lg"
     color?: "default" | "muted"
     className?: string
 }
 
 const variantMap = {
-    body: "",
+    body: "leading-relaxed",
     title: "font-semibold",
     link: "text-blue-600 hover:underline",
+    muted: "text-gray-500",
 }
 
 const sizeMap = {
@@ -33,9 +34,12 @@ export function Text({
     color = "default",
     className = "",
 }: TextProps) {
+    // If variant is "muted", override color
+    const finalColor = variant === "muted" ? "muted" : color
+
     return (
         <p
-            className={`${variantMap[variant]} ${sizeMap[size]} ${colorMap[color]} ${className}`}
+            className={`${variantMap[variant]} ${sizeMap[size]} ${colorMap[finalColor]} ${className}`}
         >
             {children}
         </p>

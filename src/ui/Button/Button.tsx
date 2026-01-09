@@ -3,7 +3,7 @@ import type { ReactNode, ButtonHTMLAttributes } from "react"
 
 type ButtonProps = {
     children: ReactNode
-    variant?: "primary" | "secondary" | "ghost" | "link"
+    variant?: "primary" | "secondary" | "ghost" | "link" | "outline"
     size?: "sm" | "md"
 } & ButtonHTMLAttributes<HTMLButtonElement>
 
@@ -12,6 +12,7 @@ const variantMap = {
     secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200",
     ghost: "text-gray-600 hover:bg-gray-100",
     link: "text-blue-600 hover:underline p-0",
+    outline: "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50",
 }
 
 const sizeMap = {

@@ -8,7 +8,16 @@ type BaseProps = {
 export function Card({ children, className = "" }: BaseProps) {
     return (
         <div
-            className={`rounded-xl border bg-white p-4 shadow-sm ${className}`}
+            className={`
+        rounded-xl
+        bg-white
+        p-6
+        shadow-sm
+        transition-all
+        border
+        border-gray-200
+        ${className}
+      `}
         >
             {children}
         </div>

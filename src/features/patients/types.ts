@@ -4,5 +4,11 @@ export type Patient = {
     name: string
     avatar: string
     description: string
-    website: string
+    website?: string | null
+}
+
+export type PatientFormValues = {
+    name: string
+    description: string
+    website?: string | null
 }
