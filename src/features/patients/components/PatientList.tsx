@@ -8,10 +8,11 @@ import { usePatientsStore } from "../hooks/usePatientsStorage"
 import type { Patient } from "../types"
 
 type Props = {
+    patients?: Patient[]            // 👈 ahora es opcional
     onEditPatient?: (patient: Patient) => void
 }
 
-export function PatientList({ onEditPatient }: Props) {
+export function PatientList({ patients, onEditPatient }: Props) {
     const {
         fetchNextPage,
         hasNextPage,
@@ -20,12 +21,17 @@ export function PatientList({ onEditPatient }: Props) {
         isError,
     } = usePatientsInfinite()
 
-    const patients = usePatientsStore((s) => s.patients)
+    const storePatients = usePatientsStore((s) => s.patients)
+
+    // 👉 si vienen patients por props, la lista es "controlled"
+    const list = patients ?? storePatients
+    const enableInfinite = !patients
 
     const loadMoreRef = useRef<HTMLDivElement | null>(null)
 
-    // infinite scroll observer
+    // infinite scroll SOLO cuando usamos la lista completa
     useEffect(() => {
+        if (!enableInfinite) return
         if (!loadMoreRef.current || !hasNextPage) return
 
         const observer = new IntersectionObserver(
@@ -43,9 +49,10 @@ export function PatientList({ onEditPatient }: Props) {
 
         observer.observe(loadMoreRef.current)
         return () => observer.disconnect()
-    }, [fetchNextPage, hasNextPage, isFetchingNextPage])
+    }, [enableInfinite, fetchNextPage, hasNextPage, isFetchingNextPage])
 
-    if (isLoading && patients.length === 0) {
+    // loading inicial SOLO para infinite
+    if (enableInfinite && isLoading && list.length === 0) {
         return (
             <Stack gap="md" className="w-full">
                 {Array.from({ length: 4 }).map((_, i) => (
@@ -58,13 +65,21 @@ export function PatientList({ onEditPatient }: Props) {
         )
     }
 
-    if (isError) {
+    if (isError && enableInfinite) {
         return <Text>Failed to load patients.</Text>
+    }
+
+    if (list.length === 0) {
+        return (
+            <Text variant="muted" size="sm">
+                No patients found.
+            </Text>
+        )
     }
 
     return (
         <Stack gap="md" className="w-full">
-            {patients.map((patient) => (
+            {list.map((patient) => (
                 <PatientCard
                     key={patient.id}
                     patient={patient}
@@ -72,7 +87,8 @@ export function PatientList({ onEditPatient }: Props) {
                 />
             ))}
 
-            {hasNextPage && (
+            {/* Sentinel SOLO para infinite */}
+            {enableInfinite && hasNextPage && (
                 <div ref={loadMoreRef} className="py-4">
                     {isFetchingNextPage && (
                         <PatientCardSkeleton />

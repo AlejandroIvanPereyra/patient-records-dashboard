@@ -21,10 +21,7 @@ export function usePatientsInfinite() {
                 : undefined,
     })
 
-    /**
-     * ✅ side-effect explícito (v5 way)
-     * se ejecuta SOLO cuando llegan páginas nuevas
-     */
+
     useEffect(() => {
         if (!query.data) return
 

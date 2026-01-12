@@ -4,6 +4,7 @@ import { Text } from "@/ui/Text"
 import { Avatar } from "@/ui/Avatar"
 import { Button } from "@/ui/Button"
 import type { Patient } from "../types"
+import { useFavoritesStore } from "../hooks/useFavoritesStore"
 
 type Props = {
     patient: Patient
@@ -13,6 +14,9 @@ type Props = {
 export function PatientCard({ patient, onEdit }: Props) {
     const [expanded, setExpanded] = useState(false)
 
+    const { toggleFavorite, isFavorite } = useFavoritesStore()
+    const favorite = isFavorite(patient.id)
+
     const toggleExpanded = () => {
         setExpanded((prev) => !prev)
     }
@@ -20,6 +24,11 @@ export function PatientCard({ patient, onEdit }: Props) {
     const handleEdit = (e: React.MouseEvent) => {
         e.stopPropagation()
         onEdit?.(patient)
+    }
+
+    const handleToggleFavorite = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        toggleFavorite(patient.id)
     }
 
     const truncatedDescription =
@@ -54,27 +63,40 @@ export function PatientCard({ patient, onEdit }: Props) {
                             {patient.name}
                         </Text>
 
-                        {/* Chevron */}
-                        <svg
-                            width="20"
-                            height="20"
-                            viewBox="0 0 20 20"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                            className={`text-gray-400 transition-transform duration-300 ease-in-out ${expanded ? "rotate-180" : ""
-                                }`}
-                        >
-                            <path
-                                d="M6 8l4 4 4-4"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
-                        </svg>
+                        <div className="flex items-center gap-2">
+                            {/* Favorite button */}
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={handleToggleFavorite}
+                                aria-label="Toggle favorite"
+                                className="text-yellow-500 hover:scale-110 transition"
+                            >
+                                {favorite ? "★" : "☆"}
+                            </Button>
+
+                            {/* Chevron */}
+                            <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 20 20"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                className={`text-gray-400 transition-transform duration-300 ease-in-out ${expanded ? "rotate-180" : ""
+                                    }`}
+                            >
+                                <path
+                                    d="M6 8l4 4 4-4"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                            </svg>
+                        </div>
                     </div>
 
-                    {/* Description (always visible) */}
+                    {/* Description */}
                     <div className="text-sm text-gray-600 leading-relaxed">
                         <Text variant="muted" size="sm">
                             {expanded
