@@ -42,17 +42,27 @@ export function Modal({
                 onClick={onClose}
             />
 
-            {/* Modal */}
-            <div className="relative z-10 flex min-h-full items-center justify-center p-4">
-                <Card className="w-full max-w-lg">
+            {/* Layout container */}
+            <div className="relative z-10 flex h-[100dvh] items-end sm:items-center justify-center">
+                <Card
+                    className="
+            flex
+            w-full
+            h-full
+            sm:h-auto
+            sm:max-w-lg
+            flex-col
+            rounded-none
+            sm:rounded-lg
+            overflow-hidden
+          "
+                >
                     {/* Header */}
                     {title && (
-                        <div className="flex items-center justify-between mb-4">
-                            {title && (
-                                <Text variant="title" size="lg">
-                                    {title}
-                                </Text>
-                            )}
+                        <div className="flex items-center justify-between border-b p-4">
+                            <Text variant="title" size="lg">
+                                {title}
+                            </Text>
 
                             <Button
                                 variant="link"
@@ -65,7 +75,9 @@ export function Modal({
                     )}
 
                     {/* Content */}
-                    <div>{children}</div>
+                    <div className="flex-1 overflow-y-auto p-4">
+                        {children}
+                    </div>
                 </Card>
             </div>
         </div>,

@@ -20,7 +20,7 @@ export function PatientFormModal({ open, onClose, patient }: Props) {
         try {
             // Convert optional website to string (empty string if null/undefined)
             const website = values.website ?? ""
-            
+
             if (patient) {
                 // Edit existing patient - preserve id, avatar, and createdAt
                 updatePatient({
@@ -35,7 +35,7 @@ export function PatientFormModal({ open, onClose, patient }: Props) {
                 const newPatient: Patient = {
                     id: crypto.randomUUID(),
                     createdAt: new Date().toISOString(),
-                    avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${values.name}`,
+                    avatar: `${import.meta.env.VITE_AVATAR_API_URL}?seed=${values.name}`,
                     name: values.name,
                     description: values.description,
                     website,

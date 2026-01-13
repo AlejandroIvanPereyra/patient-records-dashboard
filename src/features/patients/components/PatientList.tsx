@@ -8,7 +8,7 @@ import { usePatientsStore } from "../hooks/usePatientsStorage"
 import type { Patient } from "../types"
 
 type Props = {
-    patients?: Patient[]            // 👈 ahora es opcional
+    patients?: Patient[]            // Si se pasa, desactiva infinite scroll
     onEditPatient?: (patient: Patient) => void
 }
 
@@ -23,13 +23,11 @@ export function PatientList({ patients, onEditPatient }: Props) {
 
     const storePatients = usePatientsStore((s) => s.patients)
 
-    // 👉 si vienen patients por props, la lista es "controlled"
     const list = patients ?? storePatients
     const enableInfinite = !patients
 
     const loadMoreRef = useRef<HTMLDivElement | null>(null)
 
-    // infinite scroll SOLO cuando usamos la lista completa
     useEffect(() => {
         if (!enableInfinite) return
         if (!loadMoreRef.current || !hasNextPage) return
@@ -49,9 +47,10 @@ export function PatientList({ patients, onEditPatient }: Props) {
 
         observer.observe(loadMoreRef.current)
         return () => observer.disconnect()
-    }, [enableInfinite, fetchNextPage, hasNextPage, isFetchingNextPage])
+    }, [enableInfinite, fetchNextPage, hasNextPage, isFetchingNextPage, list.length])
 
-    // loading inicial SOLO para infinite
+
+
     if (enableInfinite && isLoading && list.length === 0) {
         return (
             <Stack gap="md" className="w-full">

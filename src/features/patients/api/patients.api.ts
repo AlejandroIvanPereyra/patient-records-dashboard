@@ -1,7 +1,10 @@
 import type { Patient } from "../types"
 
-const API_URL =
-    "https://63bedcf7f5cfc0949b634fc8.mockapi.io/users"
+const API_URL = import.meta.env.VITE_PATIENTS_API_URL
+if (!API_URL) {
+    throw new Error("VITE_PATIENTS_API_URL environment variable is not defined")
+}
+
 
 type GetPatientsParams = {
     page?: number
