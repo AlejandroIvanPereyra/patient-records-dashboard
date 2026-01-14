@@ -2,7 +2,6 @@ import { useState } from "react"
 import * as yup from "yup"
 import { ValidationError } from 'yup'
 import { Button } from "@/ui/Button"
-import { Text } from "@/ui/Text"
 import type { PatientFormValues } from "../types"
 
 /* =========================
@@ -91,28 +90,30 @@ export function PatientForm({ initialValues, onSubmit }: Props) {
         <form onSubmit={handleSubmit} className="space-y-4">
             {/* Name */}
             <div>
-                <Text size="sm" className="mb-1 font-medium">
+                <label
+                    htmlFor="name"
+                    className="mb-1 block text-sm font-medium"
+                >
                     Name
-                </Text>
+                </label>
                 <input
+                    id="name"
                     name="name"
                     value={values.name}
                     onChange={handleChange}
                     className="w-full rounded border px-3 py-2"
                 />
-                {errors.name && (
-                    <Text size="sm" color="muted">
-                        {errors.name}
-                    </Text>
-                )}
             </div>
-
             {/* Description */}
             <div>
-                <Text size="sm" className="mb-1 font-medium">
+                <label
+                    htmlFor="description"
+                    className="mb-1 block text-sm font-medium"
+                >
                     Description
-                </Text>
+                </label>
                 <textarea
+                    id="description"
                     name="description"
                     value={values.description}
                     onChange={handleChange}
@@ -120,36 +121,34 @@ export function PatientForm({ initialValues, onSubmit }: Props) {
                     className="w-full rounded border px-3 py-2"
                 />
                 {errors.description && (
-                    <Text size="sm" color="muted">
-                        {errors.description}
-                    </Text>
+                    <p className="mt-1 text-sm text-red-600">{errors.description}</p>
                 )}
             </div>
 
             {/* Website */}
             <div>
-                <Text size="sm" className="mb-1 font-medium">
+                <label
+                    htmlFor="website"
+                    className="mb-1 block text-sm font-medium"
+                >
                     Website
-                </Text>
+                </label>
                 <input
+                    id="website"
                     name="website"
+                    type="url"
                     value={values.website ?? ""}
                     onChange={handleChange}
                     className="w-full rounded border px-3 py-2"
                 />
                 {errors.website && (
-                    <Text size="sm" color="muted">
-                        {errors.website}
-                    </Text>
+                    <p className="mt-1 text-sm text-red-600">{errors.website}</p>
                 )}
             </div>
 
-            {/* Actions */}
-            <div className="flex justify-end pt-4">
-                <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? "Saving..." : "Save"}
-                </Button>
-            </div>
+            <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Submitting..." : "Submit"}
+            </Button>
         </form>
     )
 }

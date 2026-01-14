@@ -60,7 +60,7 @@ export function Modal({
                     {/* Header */}
                     {title && (
                         <div className="flex items-center justify-between border-b p-4">
-                            <Text variant="title" size="lg">
+                            <Text as="h2" variant="title" size="lg">
                                 {title}
                             </Text>
 

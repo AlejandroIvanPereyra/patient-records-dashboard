@@ -1,8 +1,9 @@
 // src/ui/Text/Text.tsx
-import type { ReactNode } from "react"
+import type { ReactNode, JSX } from "react"
 
 type TextProps = {
     children: ReactNode
+    as?: keyof JSX.IntrinsicElements
     variant?: "body" | "title" | "link" | "muted"
     size?: "sm" | "md" | "lg"
     color?: "default" | "muted"
@@ -29,6 +30,7 @@ const colorMap = {
 
 export function Text({
     children,
+    as: Component = "p",
     variant = "body",
     size = "md",
     color = "default",
@@ -38,10 +40,10 @@ export function Text({
     const finalColor = variant === "muted" ? "muted" : color
 
     return (
-        <p
+        <Component
             className={`${variantMap[variant]} ${sizeMap[size]} ${colorMap[finalColor]} ${className}`}
         >
             {children}
-        </p>
+        </Component>
     )
 }

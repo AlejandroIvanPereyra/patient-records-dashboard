@@ -5,7 +5,7 @@ import { PatientFormModal } from "@/features/patients/components/PatientFormModa
 import { PatientList } from "@/features/patients/components/PatientList"
 
 import { Stack } from "@/ui/Stack"
-import { Text } from "@/ui/Text"
+//import { Text } from "@/ui/Text"
 import { Button } from "@/ui/Button"
 import { Tabs } from "@/ui/Tabs"
 
@@ -55,14 +55,9 @@ export function PatientsPage() {
             <Stack gap="lg" className="max-w-4xl mx-auto px-6 py-8">
                 {/* Header */}
                 <Stack gap="xs">
-                    <Text
-                        variant="title"
-                        size="lg"
-                        className="text-2xl font-bold text-gray-900"
-                    >
+                    <h1 className="text-2xl font-bold text-black-900">
                         Patient Records
-                    </Text>
-
+                    </h1>
                     <div className="flex items-center justify-between">
                         <Tabs
                             value={activeTab}
