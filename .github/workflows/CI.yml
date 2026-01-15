@@ -17,9 +17,6 @@ jobs:
       statuses: write
     env:
       CI: true
-      # Environment variables for Vite (required for app to start)
-      # Set these as GitHub Secrets for production API URLs
-      # Fallback values are provided for testing
       VITE_PATIENTS_API_URL: ${{ secrets.VITE_PATIENTS_API_URL || 'https://jsonplaceholder.typicode.com/users' }}
       VITE_AVATAR_API_URL: ${{ secrets.VITE_AVATAR_API_URL || 'https://api.dicebear.com/7.x/avataaars/svg' }}
 
@@ -51,8 +48,34 @@ jobs:
           path: playwright-report/
           retention-days: 30
 
-      - name: 🔔 Notify Vercel
-        if: always()
-        uses: vercel/repository-dispatch/actions/status@v1
+
+
+  deploy:
+    name: 🚀 Deploy to Vercel (Production)
+    needs: test
+    runs-on: ubuntu-latest
+
+    # 🔒 Solo deployar en push a main (no en PRs)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          name: "Vercel - patient-records-dashboard: test"
+          node-version: 20
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🚀 Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          npx vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+          npx vercel build --prod --token=$VERCEL_TOKEN
+          npx vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
