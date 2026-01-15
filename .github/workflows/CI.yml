@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test-and-deploy:
+  test:
     runs-on: ubuntu-latest
     env:
       CI: true
@@ -18,7 +18,8 @@ jobs:
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 25.2.1
+          node-version: 20
+          cache: "npm"
 
       - name: 📦 Install dependencies
         run: npm ci
@@ -26,20 +27,5 @@ jobs:
       - name: 🎭 Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      - name: ▶️ Start Vite dev server
-        run: npm run dev
-        # Levantamos el servidor en background para los tests
-        # Usamos `&` para que no bloquee el siguiente step
-        # pero esperamos con sleep para que arranque bien
-        # Lo mejor es combinar con wait-on (se ve abajo)
-        # Nota: Si quieres precisión mejor usa 'wait-on' npm package
-
-      - name: ⏳ Wait for localhost:5173
-        uses: jakejarvis/wait-action@v0.1.1
-        with:
-          url: http://localhost:5173
-          timeout: 30  # segundos
-
       - name: 🧪 Run Playwright tests
         run: npx playwright test
-
