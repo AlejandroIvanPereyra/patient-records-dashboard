@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useInfiniteQuery } from "@tanstack/react-query"
-import { getPatients } from "@/features/patients/api/patients.api"
+import { getPatients } from "@/features/patients/api/getPatients"
 import { usePatientsStore } from "./usePatientsStorage"
 
 const QUERY_KEY = ["patients", "infinite"]
