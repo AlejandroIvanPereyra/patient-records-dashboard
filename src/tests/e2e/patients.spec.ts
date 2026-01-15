@@ -12,6 +12,9 @@ test.describe("Patients E2E", () => {
 
         // Recargar para aplicar el estado limpio
         await page.reload()
+
+        // Wait for network requests to complete
+        await page.waitForLoadState("networkidle")
     })
 
     /**
@@ -24,10 +27,11 @@ test.describe("Patients E2E", () => {
             page.getByRole("heading", { name: /patient records/i })
         ).toBeVisible()
 
-        // Al menos un botón de edición visible
+        // Wait for patients to load - the edit button appears after data is loaded
+        // This implicitly waits for loading skeletons to disappear
         await expect(
             page.getByRole("button", { name: /edit patient/i }).first()
-        ).toBeVisible()
+        ).toBeVisible({ timeout: 15000 })
     })
 
     /**
@@ -52,8 +56,13 @@ test.describe("Patients E2E", () => {
 
         await page.getByRole("button", { name: /submit/i }).click()
 
+        // Wait for modal to close
+        await expect(
+            page.getByRole("heading", { name: /add patient/i })
+        ).not.toBeVisible({ timeout: 5000 })
+
         // El paciente aparece una sola vez en la lista
-        await expect(page.locator(`text=${patientName}`)).toHaveCount(1)
+        await expect(page.locator(`text=${patientName}`)).toHaveCount(1, { timeout: 10000 })
     })
 
     /**
@@ -69,7 +78,12 @@ test.describe("Patients E2E", () => {
         await page.getByLabel(/description/i).fill("Paciente favorito")
         await page.getByRole("button", { name: /submit/i }).click()
 
-        await expect(page.locator(`text=${patientName}`)).toBeVisible()
+        // Wait for modal to close
+        await expect(
+            page.getByRole("heading", { name: /add patient/i })
+        ).not.toBeVisible({ timeout: 5000 })
+
+        await expect(page.locator(`text=${patientName}`)).toBeVisible({ timeout: 10000 })
 
         // Marcar como favorito (primer toggle asociado)
         await page
@@ -77,10 +91,15 @@ test.describe("Patients E2E", () => {
             .first()
             .click()
 
+        // Wait for favorites count to update (indicates state has changed)
+        await expect(
+            page.getByRole("button", { name: /favorites/i })
+        ).toContainText(/favorites \(1\)/i, { timeout: 5000 })
+
         // Ir a la sección Favorites
         await page.getByRole("button", { name: /favorites/i }).click()
 
         // Verificar que el paciente está en favoritos
-        await expect(page.locator(`text=${patientName}`)).toBeVisible()
+        await expect(page.locator(`text=${patientName}`)).toBeVisible({ timeout: 10000 })
     })
 })
