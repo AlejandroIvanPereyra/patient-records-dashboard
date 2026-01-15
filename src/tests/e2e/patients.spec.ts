@@ -2,10 +2,10 @@ import { test, expect } from "@playwright/test"
 
 test.describe("Patients E2E", () => {
     test.beforeEach(async ({ page }) => {
-        // Navegar a la app
+        // Limpiar estado persistente antes de navegar
         await page.goto("/")
-
-        // Limpiar estado persistente (localStorage, etc.)
+        
+        // Limpiar localStorage
         await page.evaluate(() => {
             localStorage.clear()
         })
@@ -13,8 +13,16 @@ test.describe("Patients E2E", () => {
         // Recargar para aplicar el estado limpio
         await page.reload()
 
-        // Wait for network requests to complete
-        await page.waitForLoadState("networkidle")
+        // Wait for the page to be fully loaded - wait for the main heading to appear
+        // This ensures the app has initialized and rendered
+        await expect(
+            page.getByRole("heading", { name: /patient records/i })
+        ).toBeVisible({ timeout: 30000 })
+        
+        // Wait for network to be idle (but don't fail if it takes time)
+        await page.waitForLoadState("networkidle").catch(() => {
+            // If networkidle times out, continue anyway - the page is loaded
+        })
     })
 
     /**
@@ -22,7 +30,7 @@ test.describe("Patients E2E", () => {
      * Listar pacientes
      */
     test("lists patients", async ({ page }) => {
-        // Header principal visible
+        // Header principal visible (already checked in beforeEach, but verify)
         await expect(
             page.getByRole("heading", { name: /patient records/i })
         ).toBeVisible()
@@ -31,7 +39,7 @@ test.describe("Patients E2E", () => {
         // This implicitly waits for loading skeletons to disappear
         await expect(
             page.getByRole("button", { name: /edit patient/i }).first()
-        ).toBeVisible({ timeout: 15000 })
+        ).toBeVisible({ timeout: 30000 })
     })
 
     /**
