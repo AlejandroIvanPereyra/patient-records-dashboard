@@ -52,5 +52,5 @@ jobs:
         if: always()
         uses: vercel/repository-dispatch/actions/status@v1
         with:
-          name: Vercel - patient-records-dashboard: test
+          name: "Vercel - patient-records-dashboard: test"
           status: ${{ job.status }}
