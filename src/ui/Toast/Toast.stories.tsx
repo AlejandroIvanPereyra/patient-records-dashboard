@@ -9,7 +9,7 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'A toast notification component that displays temporary messages. Automatically dismisses after a specified duration. Renders as a portal to avoid z-index issues.',
+        component: 'A toast notification component that displays temporary messages. Automatically dismisses after a specified duration. Includes a close button for manual dismissal. Renders as a portal to avoid z-index issues.',
       },
     },
   },
@@ -26,6 +26,9 @@ const meta = {
     duration: {
       control: 'number',
       description: 'Duration in milliseconds before auto-dismiss',
+    },
+    onClose: {
+      description: 'Callback function called when toast is closed (via close button or auto-dismiss)',
     },
   },
 } satisfies Meta<typeof Toast>;

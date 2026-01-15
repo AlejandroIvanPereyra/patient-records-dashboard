@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { createPortal } from "react-dom"
 import type { Patient } from "@/features/patients/types"
 
 import { PatientFormModal } from "@/features/patients/components/PatientFormModal"
@@ -18,6 +19,7 @@ export function PatientsPage() {
     const [open, setOpen] = useState(false)
     const [editingPatient, setEditingPatient] = useState<Patient | undefined>()
     const [activeTab, setActiveTab] = useState<TabKey>("all")
+    const [showScrollToTop, setShowScrollToTop] = useState(false)
 
     const patients = usePatientsStore((s) => s.patients)
     const favoriteIds = useFavoritesStore((s) => s.favoriteIds)
@@ -49,6 +51,23 @@ export function PatientsPage() {
         setOpen(false)
         setEditingPatient(undefined)
     }
+
+    const handleScrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: "smooth" })
+    }
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop
+            setShowScrollToTop(scrollY > 200)
+        }
+
+        // Check initial scroll position
+        handleScroll()
+
+        window.addEventListener("scroll", handleScroll, { passive: true })
+        return () => window.removeEventListener("scroll", handleScroll)
+    }, [])
 
     return (
         <div className="flex-1 bg-gray-50 min-h-screen">
@@ -83,6 +102,33 @@ export function PatientsPage() {
                 onClose={handleCloseModal}
                 patient={editingPatient}
             />
+
+            {/* Scroll to Top Button */}
+            {showScrollToTop &&
+                createPortal(
+                    <button
+                        onClick={handleScrollToTop}
+                        className="fixed bottom-8 right-8 z-[100] rounded-full w-12 h-12 shadow-lg flex items-center justify-center transition-opacity duration-300 bg-blue-600 text-white hover:bg-blue-700 active:scale-95"
+                        aria-label="Scroll to top"
+                        type="button"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={2.5}
+                            stroke="currentColor"
+                            className="w-6 h-6"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M4.5 15.75l7.5-7.5 7.5 7.5"
+                            />
+                        </svg>
+                    </button>,
+                    document.body
+                )}
         </div>
     )
 }

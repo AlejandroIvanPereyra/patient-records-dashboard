@@ -94,7 +94,7 @@ export function PatientForm({ initialValues, onSubmit }: Props) {
                     htmlFor="name"
                     className="mb-1 block text-sm font-medium"
                 >
-                    Name
+                    Name <span className="text-red-500">*</span>
                 </label>
                 <input
                     id="name"
@@ -110,7 +110,7 @@ export function PatientForm({ initialValues, onSubmit }: Props) {
                     htmlFor="description"
                     className="mb-1 block text-sm font-medium"
                 >
-                    Description
+                    Description <span className="text-red-500">*</span>
                 </label>
                 <textarea
                     id="description"
