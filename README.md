@@ -1,73 +1,137 @@
-# React + TypeScript + Vite
+Patient Records Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend application for managing patient records, developed as part of a technical challenge.
+The project emphasizes clean architecture, maintainability, scalability, and automated quality assurance.
 
-Currently, two official plugins are available:
+Project Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This application provides functionality to:
 
-## React Compiler
+Display a list of patients
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Create and edit patient records
 
-## Expanding the ESLint configuration
+Mark patients as favorites
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Filter patients based on favorites
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Deliver a responsive and consistent user interface
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Beyond core functionality, the primary objective of the project is to demonstrate technical decision-making, code organization, and frontend best practices.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Architecture
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The codebase is organized into three primary layers, designed to promote separation of concerns and long-term maintainability.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Features
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Feature-based folders represent distinct parts of the application domain (e.g. patients).
+
+Each feature encapsulates:
+
+Domain-specific components
+
+Related types and models
+
+Hooks and logic specific to that domain
+
+This approach improves cohesion and reduces the cognitive overhead when working on or extending a specific area of the application.
+
+UI
+
+The UI layer contains reusable, domain-agnostic components.
+
+Responsibilities of this layer include:
+
+Defining shared visual and layout rules
+
+Encapsulating Tailwind CSS styles
+
+Ensuring visual consistency across the application
+
+Maximizing component reuse
+
+By centralizing UI concerns, styling decisions remain consistent and isolated from business logic.
+
+Pages
+
+Pages are responsible for:
+
+Composing features and UI components
+
+Managing page-level UI state
+
+Coordinating user interactions and data flow
+
+Pages do not contain business logic; instead, they act as orchestration layers that connect the different building blocks of the application.
+
+Technology Stack
+
+React with TypeScript
+
+Vite
+
+Tailwind CSS
+
+Playwright for end-to-end testing
+
+GitHub Actions for Continuous Integration
+
+Vercel for deployment
+
+Testing Strategy
+
+The project includes end-to-end (E2E) tests implemented with Playwright, focusing on critical user flows.
+
+Testing is integrated into the development workflow to:
+
+Automatically validate functionality on each push or pull request
+
+Prevent regressions from reaching the main branch
+
+Increase confidence in production deployments
+
+CI / CD Pipeline
+
+GitHub Actions executes automated tests on every push
+
+The pipeline fails if any test does not pass
+
+Vercel handles automatic deployments once all checks succeed
+
+This setup ensures that the deployed application always reflects a verified and tested state.
+
+Installation and Usage
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Run end-to-end tests
+npm run test
+
+# Open Playwright test runner
+npm run test:ui
+
+Design Decisions and Trade-offs
+
+A feature-based architecture was chosen over file-type-based organization to improve scalability and maintainability
+
+No global state management library was introduced, as the application did not require complex shared state
+
+Responsiveness is handled through CSS and layout strategies rather than JavaScript, reducing unnecessary complexity
+
+The project prioritizes clarity, structure, and long-term maintainability over premature optimization
+
+Conclusion
+
+This project reflects a pragmatic and professional approach to frontend development, focusing on:
+
+Clear architectural boundaries
+
+Maintainable and scalable code
+
+Automated quality assurance
+
+Strong developer experience
